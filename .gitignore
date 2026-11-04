@@ -1,0 +1,8 @@
+node_modules
+.next
+.env
+.env.local
+.vercel
+photos/
+next-env.d.ts
+.DS_Store
