@@ -1,0 +1,6 @@
+.footer { padding-block: var(--space-7) var(--space-8); border-block-start: 1px solid var(--color-border); scroll-margin-block-start: var(--space-7); }
+.grid { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; text-transform: uppercase; letter-spacing: 0.02em; }
+.block { display: grid; gap: var(--space-2); font-style: normal; color: var(--color-muted); }
+.block strong { color: var(--color-text); }
+.legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); margin-block-start: var(--space-6); color: var(--color-muted); font-size: 0.82rem; }

@@ -1,0 +1,10 @@
+.wrap { display: grid; gap: var(--space-3); min-inline-size: 0; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+.tile { position: relative; display: block; overflow: hidden; border-radius: var(--radius-sm); background: var(--color-surface-2); aspect-ratio: 4 / 3; }
+.main { grid-column: 1 / -1; aspect-ratio: 16 / 10; border-radius: var(--radius-md); }
+.photo { inline-size: 100%; block-size: 100%; object-fit: cover; transition: scale 0.8s var(--ease-out); }
+.tile:hover .photo { scale: 1.04; }
+.empty { display: grid; place-items: center; aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--color-surface-2); }
+.more { margin: 0; }
+.more summary { cursor: pointer; font-weight: 700; font-size: 0.9rem; color: var(--color-brand-text); }
+.more .grid { margin-block-start: var(--space-3); }

@@ -1,0 +1,14 @@
+.section { padding-block: var(--space-7); scroll-margin-block-start: var(--space-7); }
+.timeline { position: relative; margin-block-start: var(--space-6); padding-inline-start: clamp(4rem, 12vw, 9rem); }
+.track, .line { position: absolute; inset-block: 0; inset-inline-start: 1.25rem; inline-size: 3px; border-radius: 2px; }
+.track { background: var(--color-border); }
+.line { background: var(--color-brown); transform-origin: top; }
+.items { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-6); }
+.step { position: relative; display: grid; gap: var(--space-2); }
+.num {
+  position: absolute; inset-inline-start: calc(-1 * clamp(4rem, 12vw, 9rem) + 0.15rem); inset-block-start: 0;
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(2rem, 6vw, 4rem); line-height: 1;
+  color: var(--color-brown-text); background: var(--color-bg); padding-block: var(--space-2);
+}
+.step h3 { font-size: clamp(1.5rem, 4vw, 2.4rem); font-weight: 800; }
+.step p { color: var(--color-muted); max-inline-size: 50ch; }

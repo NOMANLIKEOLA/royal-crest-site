@@ -1,0 +1,14 @@
+.dialog {
+  inline-size: min(100% - 2rem, 460px); padding: var(--space-6); border-radius: var(--radius-lg); border: 1px solid var(--color-border);
+  background: var(--color-surface); color: var(--color-text);
+}
+.dialog::backdrop { background: color-mix(in oklab, var(--color-ink) 70%, transparent); backdrop-filter: blur(4px); }
+.dialog[open] { animation: pop 0.4s var(--ease-out); }
+@keyframes pop { from { opacity: 0; transform: translateY(16px) scale(0.97); } }
+.title { font-size: 1.7rem; font-weight: 800; margin-block-end: var(--space-2); }
+.truck { color: var(--color-muted); margin-block-end: var(--space-5); }
+.total { display: flex; justify-content: space-between; align-items: baseline; padding-block: var(--space-4); border-block: 1px dashed var(--color-border); margin-block-end: var(--space-4); }
+.total strong { font-family: var(--font-display); font-size: 2rem; letter-spacing: -0.03em; }
+.fine { color: var(--color-muted); font-size: 0.85rem; margin-block-end: var(--space-5); }
+.actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+.error { background: var(--color-surface-2); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); margin-block-end: var(--space-4); font-size: 0.9rem; }
