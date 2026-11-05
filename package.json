@@ -3,11 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "photos": "node --env-file=.env.local scripts/upload-photos.mjs"
-  },
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "photos": "node --env-file=.env.local scripts/upload-photos.mjs",
+  "photos:sync": "node --env-file=.env.local scripts/upload-photos.mjs --prune"
+},
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
     "framer-motion": "^12.0.0",

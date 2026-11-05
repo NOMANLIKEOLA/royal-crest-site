@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Archivo, Inter } from "next/font/google";
-import "../styles/global.css";
+import "../styles/globals.css";
 
 const display = Archivo({ subsets: ["latin"], weight: ["500", "800"], variable: "--font-archivo", display: "swap" });
 const body = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });

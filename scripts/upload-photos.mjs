@@ -1,11 +1,14 @@
-// Run with: npm run photos
-// Reads ./photos/<year>/ and uploads to the "truck-photos" bucket, then creates/updates rows in "trucks".
+// npm run photos       -> uploads/updates photos and trucks (never deletes)
+// npm run photos:sync  -> same, then also REMOVES trucks and photos that are no longer in ./photos
+//
 //   photos/2024/blue-01/1.jpg, 2.jpg ...  -> one truck with several photos (folder name = truck name)
 //   photos/2024/truck-a.jpg                -> one truck with one photo
-// Re-running is safe: it never overwrites mileage, VIN, color or status you edited in Supabase.
+// Your edits to color, miles, VIN, status etc. in Supabase are never overwritten.
 import { createClient } from "@supabase/supabase-js";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, extname, join } from "node:path";
+
+const PRUNE = process.argv.includes("--prune");
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -28,10 +31,12 @@ async function upload(truckSlug, file) {
   const { error } = await supabase.storage.from(BUCKET).upload(objectPath, readFileSync(file), {
     contentType: TYPES[ext],
     upsert: true,
-    cacheControl: "31536000",
+    cacheControl: "3600",
   });
   if (error) throw new Error(`${file}: ${error.message}`);
-  return supabase.storage.from(BUCKET).getPublicUrl(objectPath).data.publicUrl;
+  const base = supabase.storage.from(BUCKET).getPublicUrl(objectPath).data.publicUrl;
+  // The ?v= stamp changes whenever the file changes, so browsers never show an old copy
+  return { objectPath, url: `${base}?v=${Math.floor(statSync(file).mtimeMs)}` };
 }
 
 if (!existsSync(ROOT)) {
@@ -54,15 +59,61 @@ for (const year of readdirSync(ROOT).filter((d) => /^\d{4}$/.test(d)).sort()) {
 }
 
 if (jobs.length === 0) {
-  console.error("No photos found in photos/<year>/");
+  console.error("No photos found in photos/<year>/. Nothing was changed.");
   process.exit(1);
 }
 
+// 1. Upload everything that is in the folders
+const keep = new Map(); // truck slug -> Set of storage paths that should exist
 for (const job of jobs) {
   const images = [];
-  for (const file of job.files) images.push(await upload(job.slug, file));
+  const paths = new Set();
+  for (const file of job.files) {
+    const r = await upload(job.slug, file);
+    images.push(r.url);
+    paths.add(r.objectPath);
+  }
   const { error } = await supabase.from("trucks").upsert({ slug: job.slug, year: job.year, images }, { onConflict: "slug" });
   if (error) throw new Error(`${job.slug}: ${error.message}`);
+  keep.set(job.slug, paths);
   console.log(`${job.slug}: ${images.length} photo(s)`);
 }
-console.log(`Done. ${jobs.length} truck(s). Edit mileage, VIN and color in the Supabase Table Editor.`);
+
+// 2. Optional: remove whatever is no longer in the folders
+if (PRUNE) {
+  const protectedSlugs = new Set();
+
+  const { data: rows, error: rowsError } = await supabase.from("trucks").select("id, slug");
+  if (rowsError) throw new Error(rowsError.message);
+
+  for (const row of rows ?? []) {
+    if (keep.has(row.slug)) continue;
+    const { count } = await supabase.from("reservations").select("id", { count: "exact", head: true }).eq("truck_id", row.id);
+    if (count) {
+      protectedSlugs.add(row.slug);
+      console.warn(`Kept ${row.slug}: it has reservations, so it was not deleted.`);
+      continue;
+    }
+    const { error } = await supabase.from("trucks").delete().eq("id", row.id);
+    if (error) throw new Error(`${row.slug}: ${error.message}`);
+    console.log(`Removed truck ${row.slug}`);
+  }
+
+  const { data: folders } = await supabase.storage.from(BUCKET).list("", { limit: 1000 });
+  for (const folder of folders ?? []) {
+    if (folder.id !== null) continue; // only look inside folders
+    if (protectedSlugs.has(folder.name)) continue;
+    const { data: files } = await supabase.storage.from(BUCKET).list(folder.name, { limit: 1000 });
+    const wanted = keep.get(folder.name);
+    const stale = (files ?? [])
+      .map((f) => `${folder.name}/${f.name}`)
+      .filter((path) => !wanted || !wanted.has(path));
+    if (stale.length) {
+      const { error } = await supabase.storage.from(BUCKET).remove(stale);
+      if (error) throw new Error(error.message);
+      console.log(`Deleted ${stale.length} old file(s) from ${folder.name}`);
+    }
+  }
+}
+
+console.log(`Done. ${jobs.length} truck(s).${PRUNE ? "" : " (Use npm run photos:sync to also remove deleted trucks and photos.)"}`);
