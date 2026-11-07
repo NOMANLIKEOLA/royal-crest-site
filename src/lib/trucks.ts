@@ -4,9 +4,11 @@ import { DEMO_TRUCKS } from "./demo";
 
 interface Row {
   id: string;
+  slug: string;
   year: number;
   make: string;
   model: string;
+  price: number | null;
   color: string | null;
   miles: number | null;
   vin: string | null;
@@ -25,11 +27,12 @@ export async function getTrucks(): Promise<Truck[]> {
   const supabase = createClient(url, key, { auth: { persistSession: false } });
   const { data, error } = await supabase
     .from("trucks")
-    .select("id, year, make, model, color, miles, vin, engine, transmission, images, status")
+    .select("id, slug, year, make, model, price, color, miles, vin, engine, transmission, images, status")
     .neq("status", "sold")
     .order("year", { ascending: false })
     .order("created_at", { ascending: true });
 
+  if (error) console.error("Supabase error:", error.message);
   if (error || !data || data.length === 0) return DEMO_TRUCKS;
   return (data as unknown as Row[]).map((r) => ({ ...r, images: r.images ?? [] }));
 }

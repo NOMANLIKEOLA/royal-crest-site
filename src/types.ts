@@ -1,9 +1,11 @@
 export interface Truck {
   id: string;
+  slug: string;
   year: number;
   make: string;
   model: string;
   images: string[];
+  price: number | null;
   miles: number | null;
   vin: string | null;
   color: string | null;

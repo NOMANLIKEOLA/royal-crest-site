@@ -27,7 +27,10 @@ export async function POST(request: Request): Promise<Response> {
     headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" },
     body: JSON.stringify({ model: process.env.CHAT_MODEL ?? "claude-sonnet-5-5", max_tokens: 400, system: SYSTEM, messages }),
   });
-  if (!res.ok) return Response.json({ error: "Assistant unavailable." }, { status: 502 });
+    if (!res.ok) {
+    console.error("Anthropic API error:", res.status, await res.text().catch(() => ""));
+    return Response.json({ error: "Assistant unavailable." }, { status: 502 });
+  }
 
   const data = (await res.json()) as { content: { type: string; text?: string }[] };
   const reply = data.content.filter((b) => b.type === "text").map((b) => b.text).join("");

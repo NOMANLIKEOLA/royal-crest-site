@@ -3,7 +3,8 @@
 import type { PointerEvent } from "react";
 import { motion } from "framer-motion";
 import type { Truck } from "@/types";
-import { messageLink, site } from "@/config/site";
+import { site } from "@/config/site";
+import { inquiryLink, viewingLink } from "@/lib/messages";
 import { formatMiles, formatMoney, truckTitle } from "@/lib/format";
 import { EASE } from "@/lib/motion";
 import { PAINT_NAMES } from "@/tokens/tokens";
@@ -27,6 +28,7 @@ export function TruckRow({ truck, onReserve }: { truck: Truck; onReserve: (t: Tr
 
   return (
     <motion.article
+      id={`truck-${truck.slug}`}
       className={s.row}
       initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -53,6 +55,7 @@ export function TruckRow({ truck, onReserve }: { truck: Truck; onReserve: (t: Tr
         </h3>
 
         <dl className={s.specs}>
+          <div className={s.spec}><dt>Price</dt><dd>{truck.price ? formatMoney(truck.price) : "On request"}</dd></div>
           <div className={s.spec}><dt>Mileage</dt><dd>{formatMiles(truck.miles)}</dd></div>
           <div className={s.spec}><dt>Engine</dt><dd>{onRequest(truck.engine)}</dd></div>
           <div className={s.spec}><dt>Color</dt><dd>{onRequest(truck.color)}</dd></div>
@@ -69,11 +72,11 @@ export function TruckRow({ truck, onReserve }: { truck: Truck; onReserve: (t: Tr
           <Button variant="pay" disabled={!available} onClick={() => onReserve(truck)}>
             {available ? `Reserve with ${formatMoney(site.depositUsd)}` : "Reserved"}
           </Button>
-          <Button variant="ghost" href={messageLink(`Hi! I have a question about the ${title}.`)}>Ask a question</Button>
+          <Button variant="ghost" href={inquiryLink(truck)}>Ask on WhatsApp</Button>
         </div>
 
         {available && (
-          <a className={s.quiet} href={messageLink(`Hi! I would like to arrange a viewing of the ${title}.`)} target="_blank" rel="noreferrer">
+          <a className={s.quiet} href={viewingLink(truck)} target="_blank" rel="noreferrer">
             Special circumstances? Request a viewing
           </a>
         )}

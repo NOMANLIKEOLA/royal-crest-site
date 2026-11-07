@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { Truck } from "@/types";
 import { formatMoney, truckTitle } from "@/lib/format";
-import { messageLink, site } from "@/config/site";
+import { site } from "@/config/site";
+import { reserveLink } from "@/lib/messages";
 import { Button } from "./ui/Button";
 import s from "./CheckoutDialog.module.css";
 
@@ -61,7 +62,7 @@ export function CheckoutDialog({ truck, onClose }: { truck: Truck | null; onClos
           {error && (
             <p className={s.error} role="alert">
               {error} You can message the team instead:{" "}
-              <a href={messageLink(`Hi! I would like to reserve the ${title}.`)} target="_blank" rel="noreferrer">WhatsApp</a>.
+              <a href={reserveLink(truck)} target="_blank" rel="noreferrer">WhatsApp</a>.
             </p>
           )}
           <div className={s.actions}>

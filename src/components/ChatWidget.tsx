@@ -13,6 +13,8 @@ const GREETING: ChatMessage = {
   content: "Hi! I’m the Royal Crest assistant. Ask me about the trucks or how to reserve one online. If you’d rather talk to the team, use the WhatsApp link below.",
 };
 
+const FALLBACK = "I can’t reach the assistant right now. Please tap “Continue on WhatsApp” below and the team will reply.";
+
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
@@ -23,6 +25,14 @@ export function ChatWidget() {
   useEffect(() => {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
   }, [messages, pending]);
+
+  // Esc closes the chat
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -39,14 +49,12 @@ export function ChatWidget() {
         body: JSON.stringify({ messages: next.filter((m) => m !== GREETING) }),
       });
       const data = (await res.json().catch(() => ({}))) as { reply?: string };
-      if (!res.ok || !data.reply) throw new Error("chat failed");
+      if (!res.ok || !data.reply) throw new Error(`chat failed (${res.status})`);
       const reply = data.reply;
       setMessages((m) => [...m, { role: "assistant", content: reply }]);
-    } catch {
-      setMessages((m) => [
-        ...m,
-        { role: "assistant", content: "I can’t reach the assistant right now. Please tap “Continue on WhatsApp” below and the team will reply." },
-      ]);
+    } catch (err) {
+      console.error(err);
+      setMessages((m) => [...m, { role: "assistant", content: FALLBACK }]);
     } finally {
       setPending(false);
     }
@@ -65,15 +73,24 @@ export function ChatWidget() {
             transition={{ duration: 0.35, ease: EASE }}
           >
             <div className={s.head}>
-              <strong>Royal Crest assistant</strong>
-              <span>Automated help, available any time</span>
+              <div className={s.headText}>
+                <strong>Royal Crest assistant</strong>
+                <span>Automated help, available any time</span>
+              </div>
+              <button type="button" className={s.close} onClick={() => setOpen(false)} aria-label="Close chat">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden>
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
             </div>
+
             <div className={s.log} ref={logRef} role="log" aria-live="polite">
               {messages.map((m, i) => (
                 <p key={i} className={`${s.msg} ${s[m.role]}`}>{m.content}</p>
               ))}
               {pending && <p className={`${s.msg} ${s.assistant}`}>Typing…</p>}
             </div>
+
             <form className={s.form} onSubmit={submit}>
               <input
                 className={s.input}
@@ -85,6 +102,7 @@ export function ChatWidget() {
               />
               <Button type="submit" disabled={pending}>Send</Button>
             </form>
+
             <a className={s.wa} href={messageLink("Hi! I was chatting on your website and would like to talk to the team.")} target="_blank" rel="noreferrer">
               Continue on WhatsApp with the team
             </a>

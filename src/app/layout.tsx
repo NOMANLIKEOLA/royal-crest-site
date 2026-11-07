@@ -7,8 +7,16 @@ const display = Archivo({ subsets: ["latin"], weight: ["500", "800"], variable: 
 const body = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: "Royal Crest Autos | Reserve your truck online",
-  description: "Royal Crest Autos: used Freightliner Cascadia sleepers. Reserve yours online with a secure deposit.",
+  description: "Used Freightliner Cascadia sleepers from 2021 to 2025. $5,000 fixed down payment.",
+  openGraph: {
+    title: "Royal Crest Autos",
+    description: "Used Freightliner Cascadia sleepers from 2021 to 2025. $5,000 fixed down payment.",
+    siteName: "Royal Crest Autos",
+    type: "website",
+    images: [{ url: "/og.png", width: 1200, height: 630 }],
+  },
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
