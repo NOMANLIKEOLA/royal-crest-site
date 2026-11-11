@@ -24,3 +24,9 @@
   box-shadow: 0 14px 30px -10px color-mix(in oklab, var(--color-ink) 60%, transparent); transition: transform 0.3s var(--ease-out);
 }
 .launcher:hover { transform: translateY(-2px); }
+
+@media (max-width: 640px) {
+  .root { inset-block-end: 0.9rem; inset-inline-end: 0.9rem; }
+  .launcher { padding: 0.7em 1em; font-size: 0.9rem; }
+  .panel { block-size: min(480px, 75svh); }
+}

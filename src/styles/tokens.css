@@ -65,3 +65,14 @@
   --color-layer-b: color-mix(in oklab, var(--color-brown) 22%, transparent);
   --color-chrome: #b4bcba;
 }
+
+@media (max-width: 640px) {
+  :root {
+    --space-5: 1.1rem;
+    --space-6: 1.75rem;
+    --space-7: 2.5rem;
+    --space-8: 4rem;
+    --text-hero: clamp(2.4rem, 12vw, 3.4rem);
+    --text-h2: clamp(1.7rem, 7vw, 2.2rem);
+  }
+}

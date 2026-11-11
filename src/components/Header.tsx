@@ -38,7 +38,7 @@ export function Header() {
               </svg>
             )}
           </button>
-          <Button href="#inventory" variant="pay">Reserve a truck</Button>
+              <Button href="#inventory" variant="pay">Reserve<span className={s.long}> a truck</span></Button>
         </div>
       </div>
     </header>

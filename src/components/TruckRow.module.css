@@ -28,3 +28,12 @@
 .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 .quiet { justify-self: start; font-size: 0.78rem; color: var(--color-muted); text-underline-offset: 3px; opacity: 0.8; }
 .quiet:hover { color: var(--color-text); opacity: 1; }
+
+@media (max-width: 640px) {
+  .row { padding: 0.9rem; gap: 1rem; border-radius: var(--radius-md); }
+  .info { gap: 0.8rem; }
+  .title { font-size: 1.6rem; }
+  .amount { font-size: 1.8rem; }
+  .specs { gap: 0.6rem 1rem; }
+  .actions a, .actions button { flex: 1 1 100%; padding: 0.75em 1em; }
+}
