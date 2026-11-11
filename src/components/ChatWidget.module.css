@@ -1,23 +1,43 @@
 .root { position: fixed; inset-block-end: var(--space-5); inset-inline-end: var(--space-5); z-index: 60; display: grid; justify-items: end; gap: var(--space-3); }
 .panel {
-  inline-size: min(360px, calc(100vw - 2 * var(--space-5))); block-size: min(480px, 70svh); display: flex; flex-direction: column; overflow: hidden;
-  border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); box-shadow: 0 30px 60px -20px color-mix(in oklab, var(--color-ink) 60%, transparent);
+  inline-size: min(360px, calc(100vw - 2 * var(--space-5))); display: flex; flex-direction: column; overflow: hidden;
+  border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border);
+  box-shadow: 0 30px 60px -20px color-mix(in oklab, var(--color-ink) 60%, transparent);
 }
-.head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); padding: var(--space-4); background: var(--color-head); color: #fff; }
+.tall { block-size: min(480px, 70svh); }
+
+.head { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-4); background: var(--color-head); color: #fff; }
+.headText { flex: 1; min-inline-size: 0; }
 .headText strong { display: block; font-family: var(--font-display); font-size: 1.05rem; }
 .headText span { font-size: 0.8rem; opacity: 0.85; }
-.close {
+.iconBtn {
   flex: none; display: inline-grid; place-items: center; inline-size: 2rem; block-size: 2rem; padding: 0; border-radius: var(--radius-sm);
   border: 0; background: rgb(255 255 255 / 0.15); color: #fff; cursor: pointer; transition: background 0.2s;
 }
-.close:hover { background: rgb(255 255 255 / 0.3); }
+.iconBtn:hover { background: rgb(255 255 255 / 0.3); }
+
+.menu { display: grid; gap: var(--space-2); padding: var(--space-3); }
+.option {
+  display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-sm); cursor: pointer;
+  border: 1px solid var(--color-border); background: transparent; color: var(--color-text); font: inherit; text-align: start; text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.3s var(--ease-out);
+}
+.option:hover { background: var(--color-surface-2); border-color: var(--color-brand); transform: translateY(-1px); }
+.optionIcon { flex: none; display: grid; place-items: center; inline-size: 2.6rem; block-size: 2.6rem; border-radius: var(--radius-sm); background: var(--color-brand); color: var(--color-on-brand); }
+.optionText { display: grid; gap: 0.1rem; min-inline-size: 0; }
+.optionText strong { font-size: 0.95rem; }
+.optionText span { font-size: 0.8rem; color: var(--color-muted); }
+
 .log { flex: 1; overflow-y: auto; padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
 .msg { max-inline-size: 85%; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-size: 0.9rem; line-height: 1.45; }
 .assistant { align-self: flex-start; background: var(--color-surface-2); }
 .user { align-self: flex-end; background: var(--color-brand); color: var(--color-on-brand); }
 .form { display: flex; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-block-start: 1px solid var(--color-border); }
 .input { flex: 1; min-inline-size: 0; font: inherit; padding: 0.6em 0.9em; border-radius: var(--radius-sm); border: 1px solid var(--color-border); background: var(--color-bg); color: var(--color-text); }
-.wa { padding: var(--space-3); text-align: center; font-size: 0.85rem; font-weight: 700; text-decoration: none; color: var(--color-brand-text); border-block-start: 1px solid var(--color-border); }
+.quick { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-block-start: 1px solid var(--color-border); font-size: 0.85rem; color: var(--color-muted); }
+.quick a { font-weight: 700; color: var(--color-brand-text); text-decoration: none; }
+.quick a:hover { text-decoration: underline; }
+
 .launcher {
   display: inline-flex; align-items: center; gap: var(--space-2); padding: 0.9em 1.3em; border-radius: var(--radius-pill); border: 0; cursor: pointer;
   font: inherit; font-weight: 700; background: var(--color-brand); color: var(--color-on-brand);
@@ -28,5 +48,58 @@
 @media (max-width: 640px) {
   .root { inset-block-end: 0.9rem; inset-inline-end: 0.9rem; }
   .launcher { padding: 0.7em 1em; font-size: 0.9rem; }
-  .panel { block-size: min(480px, 75svh); }
+  .tall { block-size: min(480px, 75svh); }
+  .head { padding: 0.8rem; }
+}.root { position: fixed; inset-block-end: var(--space-5); inset-inline-end: var(--space-5); z-index: 60; display: grid; justify-items: end; gap: var(--space-3); }
+.panel {
+  inline-size: min(360px, calc(100vw - 2 * var(--space-5))); display: flex; flex-direction: column; overflow: hidden;
+  border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border);
+  box-shadow: 0 30px 60px -20px color-mix(in oklab, var(--color-ink) 60%, transparent);
+}
+.tall { block-size: min(480px, 70svh); }
+
+.head { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-4); background: var(--color-head); color: #fff; }
+.headText { flex: 1; min-inline-size: 0; }
+.headText strong { display: block; font-family: var(--font-display); font-size: 1.05rem; }
+.headText span { font-size: 0.8rem; opacity: 0.85; }
+.iconBtn {
+  flex: none; display: inline-grid; place-items: center; inline-size: 2rem; block-size: 2rem; padding: 0; border-radius: var(--radius-sm);
+  border: 0; background: rgb(255 255 255 / 0.15); color: #fff; cursor: pointer; transition: background 0.2s;
+}
+.iconBtn:hover { background: rgb(255 255 255 / 0.3); }
+
+.menu { display: grid; gap: var(--space-2); padding: var(--space-3); }
+.option {
+  display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-sm); cursor: pointer;
+  border: 1px solid var(--color-border); background: transparent; color: var(--color-text); font: inherit; text-align: start; text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.3s var(--ease-out);
+}
+.option:hover { background: var(--color-surface-2); border-color: var(--color-brand); transform: translateY(-1px); }
+.optionIcon { flex: none; display: grid; place-items: center; inline-size: 2.6rem; block-size: 2.6rem; border-radius: var(--radius-sm); background: var(--color-brand); color: var(--color-on-brand); }
+.optionText { display: grid; gap: 0.1rem; min-inline-size: 0; }
+.optionText strong { font-size: 0.95rem; }
+.optionText span { font-size: 0.8rem; color: var(--color-muted); }
+
+.log { flex: 1; overflow-y: auto; padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+.msg { max-inline-size: 85%; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-size: 0.9rem; line-height: 1.45; }
+.assistant { align-self: flex-start; background: var(--color-surface-2); }
+.user { align-self: flex-end; background: var(--color-brand); color: var(--color-on-brand); }
+.form { display: flex; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-block-start: 1px solid var(--color-border); }
+.input { flex: 1; min-inline-size: 0; font: inherit; padding: 0.6em 0.9em; border-radius: var(--radius-sm); border: 1px solid var(--color-border); background: var(--color-bg); color: var(--color-text); }
+.quick { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-block-start: 1px solid var(--color-border); font-size: 0.85rem; color: var(--color-muted); }
+.quick a { font-weight: 700; color: var(--color-brand-text); text-decoration: none; }
+.quick a:hover { text-decoration: underline; }
+
+.launcher {
+  display: inline-flex; align-items: center; gap: var(--space-2); padding: 0.9em 1.3em; border-radius: var(--radius-pill); border: 0; cursor: pointer;
+  font: inherit; font-weight: 700; background: var(--color-brand); color: var(--color-on-brand);
+  box-shadow: 0 14px 30px -10px color-mix(in oklab, var(--color-ink) 60%, transparent); transition: transform 0.3s var(--ease-out);
+}
+.launcher:hover { transform: translateY(-2px); }
+
+@media (max-width: 640px) {
+  .root { inset-block-end: 0.9rem; inset-inline-end: 0.9rem; }
+  .launcher { padding: 0.7em 1em; font-size: 0.9rem; }
+  .tall { block-size: min(480px, 75svh); }
+  .head { padding: 0.8rem; }
 }
